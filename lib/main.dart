@@ -1,5 +1,11 @@
+// ignore_for_file: body_might_complete_normally_nullable, strict_top_level_inference, annotate_overrides, camel_case_types, use_key_in_widget_constructors
 import 'package:flutter/material.dart';
 
+List<String> title = ["do the dishes"];
+List<String> describtion = ["you will need to do dishes"];
+List<String> date = ["2026-10-18"];
+List<String> prioratyList = ["High"];
+String prioraty = "";
 void main() {
   runApp(const MyApp());
 }
@@ -7,115 +13,277 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      debugShowCheckedModeBanner: false,
+      title: 'to do list',
+
+      home: HomeScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+class HomeScreen extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  toDoListScreen createState() => toDoListScreen();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+class toDoListScreen extends State<HomeScreen> {
+  void deleteButton(index) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      title.removeAt(index);
+      describtion.removeAt(index);
+      date.removeAt(index);
     });
   }
 
-  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text("to do list"),
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 30),
+        backgroundColor: Colors.black87,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.black87, Colors.grey],
+          ),
+        ),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
           children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            ElevatedButton(
+              onPressed: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => addingScreen()),
+                );
+                setState(() {});
+              },
+              child: const Icon(Icons.add),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: title.isEmpty
+                  ? Center(
+                      child: Text(
+                        "No tasks yet",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: title.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index < title.length) {
+                          if (title.isNotEmpty) {
+                            return Card(
+                              color: Colors.black12,
+                              child: ListTile(
+                                title: Text(
+                                  title[index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Row(
+                                  children: [
+                                    Text(
+                                      describtion[index],
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    SizedBox(width: 20),
+                                    Text(
+                                      prioratyList[index],
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                leading: Text(
+                                  date[index],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                trailing: ElevatedButton(
+                                  onPressed: () {
+                                    deleteButton(index);
+                                  },
+                                  child: Icon(Icons.delete),
+                                ),
+                              ),
+                            );
+                          }
+                        }
+                      },
+                    ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+}
+
+class addingScreen extends StatefulWidget {
+  @override
+  addingPage createState() => addingPage();
+}
+
+class addingPage extends State<addingScreen> {
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  String text = "";
+  String pickedDate = "";
+  void saveButton() {
+    setState(() {
+      String descriptionFromController = descriptionController.text.trim();
+      String dateFromController = pickedDate;
+      String titleFromController = titleController.text.trim();
+      if (descriptionFromController.isNotEmpty &&
+          titleFromController.isNotEmpty &&
+          dateFromController.isNotEmpty &&
+          prioraty.isNotEmpty) {
+        date.add(dateFromController);
+        title.add(titleFromController);
+        describtion.add(descriptionFromController);
+        prioratyList.add(prioraty);
+        Navigator.pop(context);
+      } else {
+        text = "pls fill all the info!";
+      }
+    });
+  }
+
+  void lowpriorty() {
+    prioraty="Low";
+  }
+
+  void mediumpriorty() {
+    prioraty="Medium";
+  }
+
+  void highpriorty() {
+    prioraty="High";
+  }
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("adding page"),
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 30),
+        backgroundColor: Colors.black87,
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.black87, Colors.grey],
+          ),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Text(
+                  "title:",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: titleController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Text(
+                  "description:",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                Expanded(
+                  child: TextField(
+                    controller: descriptionController,
+                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Text(
+                  "date:",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                SizedBox(width: 15),
+                ElevatedButton(
+                  onPressed: () async {
+                    DateTime? selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                    );
+                    if (selectedDate != null) {
+                      pickedDate = selectedDate.toString().split(' ')[0];
+                    }
+                  },
+                  child: const Text('Select Date'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const Text(
+                  "prioraty:",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                SizedBox(width: 20),
+                ElevatedButton(onPressed: lowpriorty, child: Text("Low")),
+                SizedBox(width: 20),
+                ElevatedButton(onPressed: mediumpriorty, child: Text("Medium")),
+                SizedBox(width: 20),
+                ElevatedButton(onPressed: highpriorty, child: Text("High")),
+              ],
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(onPressed: saveButton, child: const Text("save")),
+            const SizedBox(height: 60),
+            Text(text, style: TextStyle(fontSize: 30, color: Colors.white)),
+          ],
+        ),
       ),
     );
   }
