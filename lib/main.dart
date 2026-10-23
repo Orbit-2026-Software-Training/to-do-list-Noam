@@ -1,11 +1,23 @@
 // ignore_for_file: body_might_complete_normally_nullable, strict_top_level_inference, annotate_overrides, camel_case_types, use_key_in_widget_constructors
-import 'package:flutter/material.dart';
 
+
+
+
+import 'package:flutter/material.dart';
+String showingDate="";
 List<String> title = ["do the dishes"];
-List<String> describtion = ["you will need to do dishes"];
-List<String> date = ["2026-10-18"];
+List<String> description = ["you will need to do dishes"];
+List<String> date = ["2026-10-19"];
 List<String> prioratyList = ["High"];
-String prioraty = "";
+List<String> copyOfTitle = ["do the dishes"];
+List<String> copyOfDescription = ["you will need to do dishes"];
+List<String> copyOfDate = ["2026-10-19"];
+List<String> copyOfPrioraty = ["High"];
+List<String> copyOfCategorys = ["home"];
+String date1="pls fill the date";
+enum categorys { robotics, home, school }
+
+List<String> listOfCategorys = ["home"];
 void main() {
   runApp(const MyApp());
 }
@@ -30,14 +42,85 @@ class HomeScreen extends StatefulWidget {
 }
 
 class toDoListScreen extends State<HomeScreen> {
+
   void deleteButton(index) {
     setState(() {
       title.removeAt(index);
-      describtion.removeAt(index);
+      description.removeAt(index);
       date.removeAt(index);
+      listOfCategorys.removeAt(index);
+      prioratyList.removeAt(index);
+      copyOfTitle.removeAt(index);
+      copyOfDescription.removeAt(index);
+      copyOfDate.removeAt(index);
+      copyOfCategorys.removeAt(index);
+      copyOfPrioraty.removeAt(index);
     });
   }
 
+  void filter (){
+    title.clear();
+    description.clear();
+    date.clear();
+    prioratyList.clear();
+    listOfCategorys.clear();
+    if (dropdownValue == 'all tasks') {
+      int i = 0;
+      while (i < copyOfCategorys.length) {
+          title.add(copyOfTitle[i]);
+          description.add(copyOfDescription[i]);
+          date.add(copyOfDate[i]);
+          prioratyList.add(copyOfPrioraty[i]);
+          listOfCategorys.add(copyOfCategorys[i]);
+        
+        i++;
+        }
+      }
+    
+    if (dropdownValue == "robotics") {
+      int i = 0;
+      while (i < copyOfCategorys.length) {
+        if (copyOfCategorys[i] == "robotics") {
+          title.add(copyOfTitle[i]);
+          description.add(copyOfDescription[i]);
+          date.add(copyOfDate[i]);
+          prioratyList.add(copyOfPrioraty[i]);
+          listOfCategorys.add(copyOfCategorys[i]);
+        }
+        i++;
+      }
+    }
+    if (dropdownValue == "home") {
+      int i = 0;
+      while (i < copyOfCategorys.length) {
+        if (copyOfCategorys[i] == "home") {
+          title.add(copyOfTitle[i]);
+          description.add(copyOfDescription[i]);
+          date.add(copyOfDate[i]);
+          prioratyList.add(copyOfPrioraty[i]);
+          listOfCategorys.add(copyOfCategorys[i]);
+        }
+        i++;
+      }
+    }
+    if (dropdownValue == "school") {
+      int i = 0;
+      while (i < copyOfCategorys.length) {
+        if (copyOfCategorys[i] == "school") {
+          title.add(copyOfTitle[i]);
+          description.add(copyOfDescription[i]);
+          date.add(copyOfDate[i]);
+          prioratyList.add(copyOfPrioraty[i]);
+          listOfCategorys.add(copyOfCategorys[i]);
+        }
+        i++;
+      }
+    }
+  
+
+    
+  }
+  String dropdownValue = 'all tasks';
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +138,7 @@ class toDoListScreen extends State<HomeScreen> {
             colors: [Colors.black87, Colors.grey],
           ),
         ),
+        
         child: Column(
           children: [
             ElevatedButton(
@@ -68,6 +152,7 @@ class toDoListScreen extends State<HomeScreen> {
               child: const Icon(Icons.add),
             ),
             const SizedBox(height: 16),
+            
             Expanded(
               child: title.isEmpty
                   ? Center(
@@ -80,10 +165,10 @@ class toDoListScreen extends State<HomeScreen> {
                         ),
                       ),
                     )
+                    
                   : ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: title.length,
+                      
                       itemBuilder: (BuildContext context, int index) {
                         if (index < title.length) {
                           if (title.isNotEmpty) {
@@ -101,12 +186,21 @@ class toDoListScreen extends State<HomeScreen> {
                                 subtitle: Row(
                                   children: [
                                     Text(
-                                      describtion[index],
+                                      description[index],
                                       style: TextStyle(color: Colors.white),
                                     ),
                                     SizedBox(width: 20),
                                     Text(
                                       prioratyList[index],
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(width: 20),
+                                    Text(
+                                      listOfCategorys[index],
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
@@ -135,6 +229,24 @@ class toDoListScreen extends State<HomeScreen> {
                       },
                     ),
             ),
+            DropdownButton<String>(
+              value: dropdownValue,
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropdownValue = newValue!;
+                  filter();
+                });
+                
+              },
+              items: <String>['all tasks', 'robotics', 'home', 'school']
+                  .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  })
+                  .toList(),
+            ),
           ],
         ),
       ),
@@ -153,20 +265,83 @@ class addingPage extends State<addingScreen> {
   final TextEditingController dateController = TextEditingController();
   String text = "";
   String pickedDate = "";
+  String prioraty = "";
+  String category = "";
+  int prioratyColor=0;
+  int categorysColor=0;
   void saveButton() {
     setState(() {
       String descriptionFromController = descriptionController.text.trim();
       String dateFromController = pickedDate;
       String titleFromController = titleController.text.trim();
+      List<String>splitList=[];
       if (descriptionFromController.isNotEmpty &&
           titleFromController.isNotEmpty &&
           dateFromController.isNotEmpty &&
-          prioraty.isNotEmpty) {
+          prioraty.isNotEmpty &&
+          category.isNotEmpty) {
         date.add(dateFromController);
         title.add(titleFromController);
-        describtion.add(descriptionFromController);
+        description.add(descriptionFromController);
         prioratyList.add(prioraty);
+        listOfCategorys.add(category);
+        copyOfTitle.add(titleFromController);
+        copyOfDescription.add(descriptionFromController);
+        copyOfDate.add(dateFromController);
+        copyOfPrioraty.add(prioraty);
+        copyOfCategorys.add(category);
+        int i = 0;
+      while (i < copyOfCategorys.length) {
+        if(copyOfCategorys[i]=="categorys.school"){
+          splitList=copyOfCategorys[i].split(".");
+          int j=0;
+          while(j<splitList.length){
+            if(splitList[j]=="categorys"){
+              splitList.removeAt(j);
+              copyOfCategorys.removeLast();
+              listOfCategorys.removeLast();
+              copyOfCategorys.add(splitList[0]);
+              listOfCategorys.add(splitList[0]);
+          }
+          j++;
+          }
+          
+        }
+        if(copyOfCategorys[i]=="categorys.home"){
+          splitList=copyOfCategorys[i].split(".");
+          int j=0;
+          while(j<splitList.length){
+            if(splitList[j]=="categorys"){
+              splitList.removeAt(j);
+              copyOfCategorys.removeLast();
+              listOfCategorys.removeLast();
+              copyOfCategorys.add(splitList[0]);
+              listOfCategorys.add(splitList[0]);
+          }
+          j++;
+          }
+          
+        }
+        if(copyOfCategorys[i]=="categorys.robotics"){
+          splitList=copyOfCategorys[i].split(".");
+          int j=0;
+          while(j<splitList.length){
+            if(splitList[j]=="categorys"){
+              splitList.removeAt(j);
+              copyOfCategorys.removeLast();
+              listOfCategorys.removeLast();
+              copyOfCategorys.add(splitList[0]);
+              listOfCategorys.add(splitList[0]);
+          }
+          j++;
+          }
+          
+        }
+        i++;
+        }
+        
         Navigator.pop(context);
+        date1="pls fill the date";
       } else {
         text = "pls fill all the info!";
       }
@@ -174,15 +349,47 @@ class addingPage extends State<addingScreen> {
   }
 
   void lowpriorty() {
-    prioraty="Low";
+    setState(() {
+      prioraty = "Low";
+      prioratyColor=1;
+    }); 
   }
 
   void mediumpriorty() {
-    prioraty="Medium";
+    setState(() {
+      prioraty = "Medium";
+      prioratyColor=2;
+    });   
   }
 
   void highpriorty() {
-    prioraty="High";
+    setState(() {
+      prioraty = "High";
+      prioratyColor=3;
+    });   
+  }
+
+  void roboticsCategory() {
+    setState(() {
+      category = categorys.robotics.toString();
+      categorysColor=1;
+    });
+  }
+
+  void homeCategory() {
+    setState(() {
+      category = categorys.home.toString();
+      categorysColor=2;
+    });
+    
+  }
+
+  void schoolCategory() {
+    setState(() {
+      category = categorys.school.toString();
+      categorysColor=3;
+    });
+    
   }
 
   Widget build(BuildContext context) {
@@ -256,11 +463,21 @@ class addingPage extends State<addingScreen> {
                       lastDate: DateTime(2100),
                     );
                     if (selectedDate != null) {
+                      setState(() {
                       pickedDate = selectedDate.toString().split(' ')[0];
+                      date1=pickedDate; 
+                      });
+                      
+                      
                     }
+                    
+                    print(date1);
                   },
                   child: const Text('Select Date'),
                 ),
+                SizedBox(width: 15),
+                
+                Text("date: $date1",style: TextStyle(fontSize: 20,color: Colors.white))
               ],
             ),
             const SizedBox(height: 10),
@@ -271,11 +488,45 @@ class addingPage extends State<addingScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 SizedBox(width: 20),
-                ElevatedButton(onPressed: lowpriorty, child: Text("Low")),
+                ElevatedButton(style: ElevatedButton.styleFrom(
+                backgroundColor: prioratyColor == 1 ? Colors.white70 : Colors.white,
+                ),onPressed: lowpriorty, child: Text("Low")),
                 SizedBox(width: 20),
-                ElevatedButton(onPressed: mediumpriorty, child: Text("Medium")),
+                ElevatedButton(style: ElevatedButton.styleFrom(
+                backgroundColor: prioratyColor == 2 ? Colors.white70 : Colors.white)
+                ,onPressed: mediumpriorty, child: Text("Medium")),
                 SizedBox(width: 20),
-                ElevatedButton(onPressed: highpriorty, child: Text("High")),
+                ElevatedButton(style: ElevatedButton.styleFrom(
+                backgroundColor: prioratyColor == 3 ? Colors.white70 : Colors.white),
+                onPressed: highpriorty, child: Text("High")),
+              ],
+            ),
+            Row(
+              children: [
+                const Text(
+                  "categorys:",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                SizedBox(width: 20),
+                ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                backgroundColor: categorysColor == 1 ? Colors.white70 : Colors.white,),
+                  onPressed: roboticsCategory,
+                  child: Text("Robotics"),
+                  
+                ),
+                SizedBox(width: 20),
+                ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                backgroundColor: categorysColor == 2 ? Colors.white70 : Colors.white,),
+                onPressed: homeCategory, child: Text("Home")),
+                SizedBox(width: 20),
+                ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                backgroundColor: categorysColor == 3 ? Colors.white70 : Colors.white,),
+                  onPressed: schoolCategory,
+                  child: Text("School"),
+                ),
               ],
             ),
             const SizedBox(height: 30),
