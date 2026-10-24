@@ -1,20 +1,18 @@
 // ignore_for_file: body_might_complete_normally_nullable, strict_top_level_inference, annotate_overrides, camel_case_types, use_key_in_widget_constructors
-
-
-
-
 import 'package:flutter/material.dart';
-String showingDate="";
+
+String showingDate = "";
 List<String> title = ["do the dishes"];
 List<String> description = ["you will need to do dishes"];
-List<String> date = ["2026-10-19"];
+List<String> date = ["2026-12-19"];
 List<String> prioratyList = ["High"];
 List<String> copyOfTitle = ["do the dishes"];
 List<String> copyOfDescription = ["you will need to do dishes"];
-List<String> copyOfDate = ["2026-10-19"];
+List<String> copyOfDate = ["2026-12-19"];
 List<String> copyOfPrioraty = ["High"];
 List<String> copyOfCategorys = ["home"];
-String date1="pls fill the date";
+String date1 = "pls fill the date";
+
 enum categorys { robotics, home, school }
 
 List<String> listOfCategorys = ["home"];
@@ -42,6 +40,65 @@ class HomeScreen extends StatefulWidget {
 }
 
 class toDoListScreen extends State<HomeScreen> {
+  List<String> sortingTitle = [];
+  List<String> sortingDescription = [];
+  List<String> sortingDate = [];
+  List<String> sortingPrioraty = [];
+  List<String> viewPrioraty = [];
+  List<String> sortingCatecorys = [];
+  void sorting() {
+    setState(() {
+        sortingTitle.clear();
+        sortingDescription.clear();
+        sortingDate.clear();
+        sortingPrioraty.clear();
+        viewPrioraty.clear();
+        sortingCatecorys.clear();
+        for (int i = 0; i < title.length; i++) {
+          sortingPrioraty.add(prioratyList[i]);
+        }
+        for (int i = 0; i < sortingPrioraty.length; i++) {
+          if (sortingPrioraty[i] == "High") {
+            sortingTitle.add(title[i]);
+            sortingDescription.add(description[i]);
+            sortingDate.add(date[i]);
+            viewPrioraty.add(sortingPrioraty[i]);
+            sortingCatecorys.add(listOfCategorys[i]);
+          }
+        }
+        for (int i = 0; i < sortingPrioraty.length; i++) {
+          if (sortingPrioraty[i] == "Medium") {
+            sortingTitle.add(title[i]);
+            sortingDescription.add(description[i]);
+            sortingDate.add(date[i]);
+            viewPrioraty.add(sortingPrioraty[i]);
+            sortingCatecorys.add(listOfCategorys[i]);
+          }
+        }
+        for (int i = 0; i < sortingPrioraty.length; i++) {
+          if (sortingPrioraty[i] == "Low") {
+            sortingTitle.add(title[i]);
+            sortingDescription.add(description[i]);
+            sortingDate.add(date[i]);
+            viewPrioraty.add(sortingPrioraty[i]);
+            sortingCatecorys.add(listOfCategorys[i]);
+          }
+        }
+        prioratyList.clear();
+        title.clear();
+        description.clear();
+        date.clear();
+        listOfCategorys.clear();
+        for (int i = 0; i < sortingPrioraty.length; i++) {
+          title.add(sortingTitle[i]);
+          description.add(sortingDescription[i]);
+          date.add(sortingDate[i]);
+          prioratyList.add(viewPrioraty[i]);
+          listOfCategorys.add(sortingCatecorys[i]);
+        }
+      
+    });
+  }
 
   void deleteButton(index) {
     setState(() {
@@ -58,7 +115,7 @@ class toDoListScreen extends State<HomeScreen> {
     });
   }
 
-  void filter (){
+  void filter() {
     title.clear();
     description.clear();
     date.clear();
@@ -67,16 +124,16 @@ class toDoListScreen extends State<HomeScreen> {
     if (dropdownValue == 'all tasks') {
       int i = 0;
       while (i < copyOfCategorys.length) {
-          title.add(copyOfTitle[i]);
-          description.add(copyOfDescription[i]);
-          date.add(copyOfDate[i]);
-          prioratyList.add(copyOfPrioraty[i]);
-          listOfCategorys.add(copyOfCategorys[i]);
-        
+        title.add(copyOfTitle[i]);
+        description.add(copyOfDescription[i]);
+        date.add(copyOfDate[i]);
+        prioratyList.add(copyOfPrioraty[i]);
+        listOfCategorys.add(copyOfCategorys[i]);
+
         i++;
-        }
       }
-    
+    }
+
     if (dropdownValue == "robotics") {
       int i = 0;
       while (i < copyOfCategorys.length) {
@@ -116,12 +173,11 @@ class toDoListScreen extends State<HomeScreen> {
         i++;
       }
     }
-  
-
-    
   }
+
   String dropdownValue = 'all tasks';
   Widget build(BuildContext context) {
+    sorting();
     return Scaffold(
       appBar: AppBar(
         title: Text("to do list"),
@@ -138,7 +194,7 @@ class toDoListScreen extends State<HomeScreen> {
             colors: [Colors.black87, Colors.grey],
           ),
         ),
-        
+
         child: Column(
           children: [
             ElevatedButton(
@@ -152,7 +208,7 @@ class toDoListScreen extends State<HomeScreen> {
               child: const Icon(Icons.add),
             ),
             const SizedBox(height: 16),
-            
+
             Expanded(
               child: title.isEmpty
                   ? Center(
@@ -165,10 +221,9 @@ class toDoListScreen extends State<HomeScreen> {
                         ),
                       ),
                     )
-                    
                   : ListView.builder(
                       itemCount: title.length,
-                      
+
                       itemBuilder: (BuildContext context, int index) {
                         if (index < title.length) {
                           if (title.isNotEmpty) {
@@ -236,7 +291,6 @@ class toDoListScreen extends State<HomeScreen> {
                   dropdownValue = newValue!;
                   filter();
                 });
-                
               },
               items: <String>['all tasks', 'robotics', 'home', 'school']
                   .map<DropdownMenuItem<String>>((String value) {
@@ -267,14 +321,14 @@ class addingPage extends State<addingScreen> {
   String pickedDate = "";
   String prioraty = "";
   String category = "";
-  int prioratyColor=0;
-  int categorysColor=0;
+  int prioratyColor = 0;
+  int categorysColor = 0;
   void saveButton() {
     setState(() {
       String descriptionFromController = descriptionController.text.trim();
       String dateFromController = pickedDate;
       String titleFromController = titleController.text.trim();
-      List<String>splitList=[];
+      List<String> splitList = [];
       if (descriptionFromController.isNotEmpty &&
           titleFromController.isNotEmpty &&
           dateFromController.isNotEmpty &&
@@ -291,57 +345,54 @@ class addingPage extends State<addingScreen> {
         copyOfPrioraty.add(prioraty);
         copyOfCategorys.add(category);
         int i = 0;
-      while (i < copyOfCategorys.length) {
-        if(copyOfCategorys[i]=="categorys.school"){
-          splitList=copyOfCategorys[i].split(".");
-          int j=0;
-          while(j<splitList.length){
-            if(splitList[j]=="categorys"){
-              splitList.removeAt(j);
-              copyOfCategorys.removeLast();
-              listOfCategorys.removeLast();
-              copyOfCategorys.add(splitList[0]);
-              listOfCategorys.add(splitList[0]);
+        while (i < copyOfCategorys.length) {
+          if (copyOfCategorys[i] == "categorys.school") {
+            splitList = copyOfCategorys[i].split(".");
+            int j = 0;
+            while (j < splitList.length) {
+              if (splitList[j] == "categorys") {
+                splitList.removeAt(j);
+                copyOfCategorys.removeLast();
+                listOfCategorys.removeLast();
+                copyOfCategorys.add(splitList[0]);
+                listOfCategorys.add(splitList[0]);
+              }
+              j++;
+            }
           }
-          j++;
+          if (copyOfCategorys[i] == "categorys.home") {
+            splitList = copyOfCategorys[i].split(".");
+            int j = 0;
+            while (j < splitList.length) {
+              if (splitList[j] == "categorys") {
+                splitList.removeAt(j);
+                copyOfCategorys.removeLast();
+                listOfCategorys.removeLast();
+                copyOfCategorys.add(splitList[0]);
+                listOfCategorys.add(splitList[0]);
+              }
+              j++;
+            }
           }
-          
+          if (copyOfCategorys[i] == "categorys.robotics") {
+            splitList = copyOfCategorys[i].split(".");
+            int j = 0;
+            while (j < splitList.length) {
+              if (splitList[j] == "categorys") {
+                splitList.removeAt(j);
+                copyOfCategorys.removeLast();
+                listOfCategorys.removeLast();
+                copyOfCategorys.add(splitList[0]);
+                listOfCategorys.add(splitList[0]);
+              }
+              j++;
+            }
+          }
+          i++;
         }
-        if(copyOfCategorys[i]=="categorys.home"){
-          splitList=copyOfCategorys[i].split(".");
-          int j=0;
-          while(j<splitList.length){
-            if(splitList[j]=="categorys"){
-              splitList.removeAt(j);
-              copyOfCategorys.removeLast();
-              listOfCategorys.removeLast();
-              copyOfCategorys.add(splitList[0]);
-              listOfCategorys.add(splitList[0]);
-          }
-          j++;
-          }
-          
-        }
-        if(copyOfCategorys[i]=="categorys.robotics"){
-          splitList=copyOfCategorys[i].split(".");
-          int j=0;
-          while(j<splitList.length){
-            if(splitList[j]=="categorys"){
-              splitList.removeAt(j);
-              copyOfCategorys.removeLast();
-              listOfCategorys.removeLast();
-              copyOfCategorys.add(splitList[0]);
-              listOfCategorys.add(splitList[0]);
-          }
-          j++;
-          }
-          
-        }
-        i++;
-        }
-        
+
         Navigator.pop(context);
-        date1="pls fill the date";
+        date1 = "pls fill the date";
       } else {
         text = "pls fill all the info!";
       }
@@ -351,45 +402,43 @@ class addingPage extends State<addingScreen> {
   void lowpriorty() {
     setState(() {
       prioraty = "Low";
-      prioratyColor=1;
-    }); 
+      prioratyColor = 1;
+    });
   }
 
   void mediumpriorty() {
     setState(() {
       prioraty = "Medium";
-      prioratyColor=2;
-    });   
+      prioratyColor = 2;
+    });
   }
 
   void highpriorty() {
     setState(() {
       prioraty = "High";
-      prioratyColor=3;
-    });   
+      prioratyColor = 3;
+    });
   }
 
   void roboticsCategory() {
     setState(() {
       category = categorys.robotics.toString();
-      categorysColor=1;
+      categorysColor = 1;
     });
   }
 
   void homeCategory() {
     setState(() {
       category = categorys.home.toString();
-      categorysColor=2;
+      categorysColor = 2;
     });
-    
   }
 
   void schoolCategory() {
     setState(() {
       category = categorys.school.toString();
-      categorysColor=3;
+      categorysColor = 3;
     });
-    
   }
 
   Widget build(BuildContext context) {
@@ -464,20 +513,19 @@ class addingPage extends State<addingScreen> {
                     );
                     if (selectedDate != null) {
                       setState(() {
-                      pickedDate = selectedDate.toString().split(' ')[0];
-                      date1=pickedDate; 
+                        pickedDate = selectedDate.toString().split(' ')[0];
+                        date1 = pickedDate;
                       });
-                      
-                      
                     }
-                    
-                    print(date1);
                   },
                   child: const Text('Select Date'),
                 ),
                 SizedBox(width: 15),
-                
-                Text("date: $date1",style: TextStyle(fontSize: 20,color: Colors.white))
+
+                Text(
+                  "date: $date1",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -488,17 +536,35 @@ class addingPage extends State<addingScreen> {
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 SizedBox(width: 20),
-                ElevatedButton(style: ElevatedButton.styleFrom(
-                backgroundColor: prioratyColor == 1 ? Colors.white70 : Colors.white,
-                ),onPressed: lowpriorty, child: Text("Low")),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: prioratyColor == 1
+                        ? Colors.white70
+                        : Colors.white,
+                  ),
+                  onPressed: lowpriorty,
+                  child: Text("Low"),
+                ),
                 SizedBox(width: 20),
-                ElevatedButton(style: ElevatedButton.styleFrom(
-                backgroundColor: prioratyColor == 2 ? Colors.white70 : Colors.white)
-                ,onPressed: mediumpriorty, child: Text("Medium")),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: prioratyColor == 2
+                        ? Colors.white70
+                        : Colors.white,
+                  ),
+                  onPressed: mediumpriorty,
+                  child: Text("Medium"),
+                ),
                 SizedBox(width: 20),
-                ElevatedButton(style: ElevatedButton.styleFrom(
-                backgroundColor: prioratyColor == 3 ? Colors.white70 : Colors.white),
-                onPressed: highpriorty, child: Text("High")),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: prioratyColor == 3
+                        ? Colors.white70
+                        : Colors.white,
+                  ),
+                  onPressed: highpriorty,
+                  child: Text("High"),
+                ),
               ],
             ),
             Row(
@@ -509,21 +575,31 @@ class addingPage extends State<addingScreen> {
                 ),
                 SizedBox(width: 20),
                 ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                backgroundColor: categorysColor == 1 ? Colors.white70 : Colors.white,),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: categorysColor == 1
+                        ? Colors.white70
+                        : Colors.white,
+                  ),
                   onPressed: roboticsCategory,
                   child: Text("Robotics"),
-                  
                 ),
                 SizedBox(width: 20),
                 ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                backgroundColor: categorysColor == 2 ? Colors.white70 : Colors.white,),
-                onPressed: homeCategory, child: Text("Home")),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: categorysColor == 2
+                        ? Colors.white70
+                        : Colors.white,
+                  ),
+                  onPressed: homeCategory,
+                  child: Text("Home"),
+                ),
                 SizedBox(width: 20),
                 ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                backgroundColor: categorysColor == 3 ? Colors.white70 : Colors.white,),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: categorysColor == 3
+                        ? Colors.white70
+                        : Colors.white,
+                  ),
                   onPressed: schoolCategory,
                   child: Text("School"),
                 ),
